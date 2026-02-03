@@ -6,5 +6,21 @@ resource "aws_instance" "web" {
   tags = {
     Name = "first-tf-instance"
   }
+
+  provisioner "local-exec" {
+    command    = "echo ${self.private_ip} > file.txt"
+    on_failure = continue
+  }
+
+  provisioner "local-exec" {
+    command = "echo ${self.private_ip} > file.txt"
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "echo 'Destroy-time provisioner'"
+  }
+
   user_data = file("${path.module}/script.sh")
 }
+
