@@ -7,6 +7,33 @@ resource "aws_instance" "web" {
     Name = "first-tf-instance"
   }
 
+  user_data = file("${path.module}/script.sh")
+
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = file("${path.module}/id_rsa")
+    host        = self.public_ip
+  }
+
+  ### file, local-exec, remote-exec
+  provisioner "file" {
+    source      = "readme.md"      ### terraform machine
+    destination = "/tmp/readme.md" ### remote machine
+  }
+
+  provisioner "file" {
+    content     = "this is test content" #### terraform machine
+    destination = "/tmp/content.md"      ##### remote machine
+  }
+
+  ### Copy a directory
+  provisioner "file" {
+    source      = "conf"
+    destination = "/home/ec2-user"
+  }
+
+
   provisioner "local-exec" {
     command    = "echo ${self.private_ip} > file.txt"
     on_failure = continue
@@ -21,6 +48,5 @@ resource "aws_instance" "web" {
     command = "echo 'Destroy-time provisioner'"
   }
 
-  user_data = file("${path.module}/script.sh")
 }
 
