@@ -8,3 +8,7 @@ resource "github_repository" "first_repo" {
   visibility  = "public"
   auto_init   = true
 }
+
+output "terraform-repo-url" {
+  value = github_repository.first_repo.html_url
+}
