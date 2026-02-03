@@ -48,5 +48,26 @@ resource "aws_instance" "web" {
     command = "echo 'Destroy-time provisioner'"
   }
 
+  provisioner "local-exec" {
+    command = "echo testing > /tmp/test.txt"
+  }
+
+  provisioner "local-exec" {
+    working_dir = "/tmp"
+    command     = "echo ${self.public_ip} > myip.txt"
+  }
+
+  provisioner "local-exec" {
+    interpreter = ["/usr/bin/python3", "-c"]
+    command     = "print('HelloWorld)"
+  }
+
+  provisioner "local-exec" {
+    command = "env > env.txt"
+    environment = {
+      envname = "envvalue"
+    }
+  }
+
 }
 
