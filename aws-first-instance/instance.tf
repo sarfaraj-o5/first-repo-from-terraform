@@ -69,5 +69,14 @@ resource "aws_instance" "web" {
     }
   }
 
+  provisioner "remote-exec" {
+    inline = ["ifconfig > /tmp/ifconfig.output",
+    "echo 'hello world' > /tmp/test.txt"]
+  }
+
+  provisioner "remote-exec" {
+    script = "./testscript.sh"
+  }
+
 }
 
